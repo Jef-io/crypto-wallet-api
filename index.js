@@ -1,16 +1,9 @@
 const express = require('express')
 const cors = require('cors')
-const mysql = require('mysql')
 
 const follow = require('./src/routes/follow')
 
 const app = express()
-const connection = mysql.createConnection({
-    host    : 'localhost',
-    user    : 'root',
-    password: '',
-    database: 'rtai_crypto_wallet'
-})
 app.use(cors())
 app.use(express.json())
 
