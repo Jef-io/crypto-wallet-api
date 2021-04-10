@@ -2,12 +2,16 @@ const express = require('express')
 const cors = require('cors')
 
 const follow = require('./src/routes/follow')
+const transaction = require('./src/routes/transaction')
+const cache = require('./src/routes/cache')
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 
 app.use('/follow', follow);
+app.use('/transaction', transaction);
+app.use('/cache', cache);
 
 // app.get('/login', (req, res) => {
 //     // console.log(req.body)
