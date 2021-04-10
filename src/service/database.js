@@ -11,10 +11,10 @@ const pool = mysql.createPool({
 
 exports.request = (sqlRequest, callback) => {
   pool.getConnection((err, connection) => {
-    if(err) { console.log(err); callback(true); return; }
+    if(err) { callback(err); return; }
     connection.query(sqlRequest, (err, results) => {
       connection.release();
-      if(err) { console.log(err); callback(true); return; }
+      if(err) { callback(err); return; }
       callback(false, results);
     });
   });
