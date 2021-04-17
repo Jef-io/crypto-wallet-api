@@ -5,17 +5,39 @@ const getLastCachedCryptoAmmount = (username, crypto_id) => {
         SELECT ammount 
         FROM cache 
         WHERE username='${username}' 
-        AND crypto_id='${crypto_id}'
+        AND crypto_id='${crypto_id}' 
         ORDER BY date DESC
         LIMIT 1;`
     return new Promise((resolve, reject) => {
         database.request(sqlRequest, (err, result) => {
             if (err) reject(err);
-            if (result.length === 0) resolve(0);
-            resolve(result[0].ammount);
+            if (result.length === 0) {
+                resolve(0)
+            } else {
+                resolve(result[0].ammount);
+            }
         })
     })
 }
+
+const getCurrentWallet = (username) => {
+    const sqlRequest = `
+        SELECT a.* 
+        FROM cache a 
+        LEFT OUTER JOIN cache b 
+        ON a.crypto_id = b.crypto_id AND a.date < b.date 
+        WHERE b.crypto_id IS NULL 
+        AND a.username = "${username}";`
+    return new Promise((resolve, reject) => {
+        database.request(sqlRequest, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    })
+}
+
+// SELECT a.* FROM cache a LEFT OUTER JOIN cache b ON a.crypto_id = b.crypto_id AND a.date < b.date WHERE b.crypto_id IS NULL
+// 
 
 const checkCryptoAmmount = async (username, crypto_id, sellingAmmount) => {
     try {
@@ -27,10 +49,10 @@ const checkCryptoAmmount = async (username, crypto_id, sellingAmmount) => {
     }
 }
 
-const cacheCryptoTransaction = (username, crypto_id, ammount) => {
+const cacheCryptoTransaction = (username, crypto_id, ammount, value) => {
     const sqlRequest = `INSERT INTO cache 
-                        (username, crypto_id, ammount) 
-                        VALUES ('${username}', '${crypto_id}', '${ammount}');`
+                        (username, crypto_id, ammount, value) 
+                        VALUES ('${username}', '${crypto_id}', '${ammount}', '${value}');`
     return new Promise((resolve, reject) => {
         database.request(sqlRequest, (err, result) => {
             if (err) reject(err);
@@ -57,5 +79,6 @@ export {
     cacheCryptoTransaction,
     checkCryptoAmmount,
     getLastCachedCryptoAmmount,
-    getWalletHistory
+    getWalletHistory,
+    getCurrentWallet
 }

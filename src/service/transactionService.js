@@ -22,7 +22,7 @@ const getCryptoHistory = async (username, crypto_id) => {
 
 const getFullHistory = async (username) => {
     const sqlRequest = `
-        SELECT date, type, ammount 
+        SELECT crypto_id, date, type, ammount, value 
         FROM transactions WHERE username='${username}'
         ORDER BY date DESC;`
     return new Promise((resolve, reject) => {
@@ -33,16 +33,16 @@ const getFullHistory = async (username) => {
     })
 }
 
-const buyCrypto = async (username, crypto_id, ammount) => {
+const buyCrypto = async (username, crypto_id, ammount, value) => {
     try {
         const cached = await getLastCachedCryptoAmmount(username, crypto_id);
-        await cacheCryptoTransaction(username, crypto_id, cached + ammount);
+        await cacheCryptoTransaction(username, crypto_id, (cached + ammount), value);
     } catch (err) {
         throw err
     }
     const sqlRequest = `INSERT INTO transactions 
-                        (username, crypto_id, type, ammount) 
-                        VALUES ('${username}', '${crypto_id}', 'buy', '${ammount}');`
+                        (username, crypto_id, type, ammount, value) 
+                        VALUES ('${username}', '${crypto_id}', 'buy', '${ammount}', '${value}');`
     return new Promise((resolve, reject) => {
         database.request(sqlRequest, (err, result) => {
             if (err) reject(err);
@@ -51,16 +51,16 @@ const buyCrypto = async (username, crypto_id, ammount) => {
     })
 }
 
-const sellCrypto = async (username, crypto_id, ammount) => {
+const sellCrypto = async (username, crypto_id, ammount, value) => {
     try {
         const cached = await checkCryptoAmmount(username, crypto_id, ammount)
-        await cacheCryptoTransaction(username, crypto_id, (cached - ammount));
+        await cacheCryptoTransaction(username, crypto_id, (cached - ammount), value);
     } catch (error) {
         throw error
     }
     const sqlRequest = `INSERT INTO transactions 
-                        (username, crypto_id, type, ammount) 
-                        VALUES ('${username}', '${crypto_id}', 'sell', '${ammount}');`
+                        (username, crypto_id, type, ammount, value) 
+                        VALUES ('${username}', '${crypto_id}', 'sell', '${ammount}', ${value});`
     return new Promise((resolve, reject) => {
         database.request(sqlRequest, (err, result) => {
             if (err) reject(err);

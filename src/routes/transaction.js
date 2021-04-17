@@ -34,8 +34,8 @@ router
     .route('/buy/:username')
     .post(async (req, res) => {
         try {
-            const { crypto_id, ammount } = req.body;
-            await buyCrypto(req.params.username, crypto_id, ammount)
+            const { crypto_id, ammount, value } = req.body;
+            await buyCrypto(req.params.username, crypto_id, ammount, value)
             res.status(201).send(`${ammount} ${req.body.crypto_id} succesfully bought for ${req.params.username}`)
         } catch (error) {
             res.status(400).send(error)
@@ -46,8 +46,8 @@ router
     .route('/sell/:username')
     .post(async (req, res) => {
         try {
-            const { crypto_id, ammount } = req.body;
-            await sellCrypto(req.params.username, crypto_id, ammount)
+            const { crypto_id, ammount, value } = req.body;
+            await sellCrypto(req.params.username, crypto_id, ammount, value)
             res.status(201).send(`${ammount} ${req.body.crypto_id} succesfully sold for ${req.params.username}`)
         } catch (error) {
             console.log(error);
