@@ -1,19 +1,35 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
 
 import {
     getFollowedCryptos,
     addFollowedCrypto,
     deleteFollowedCrpto
-} from '../service/followService'
+} from '../service/followService';
+
+import {
+    getCoinsList
+} from '../externalService/coinGeckoService';
+import { getCurrentWallet } from '../service/cacheService';
 
 router
     .route('/:username')
     .get(async (req, res) => {
         try {            
-            const result = await getFollowedCryptos(req.params.username);
+            const followed_cryptos = await getFollowedCryptos(req.params.username);
+            const cryptos = await getCoinsList();
+            const wallet = await getCurrentWallet(req.params.username);
+            const filtered = cryptos.filter(crypto => followed_cryptos.find(followed => followed.crypto_id === crypto.id))
+            const result = filtered.map(crypto => (
+                {...crypto, 
+                    held: wallet.find(coin => coin.crypto_id === crypto.id) 
+                    ? wallet.find(coin => coin.crypto_id === crypto.id).ammount :
+                     0
+                }
+            ))
             res.status(200).json(result)
         } catch (error) {
+            console.log(errror);
             res.status(400).send(error)
         }
     })
@@ -24,6 +40,19 @@ router
         } catch (error) {
             res.status(400).send(error)
         }     
+    })
+
+router
+    .route('/not/:username')
+    .get(async (req, res) => {
+        try {            
+            const followed_cryptos = await getFollowedCryptos(req.params.username);
+            const cryptos = await getCoinsList();
+            const filtered = cryptos.filter(crypto => !followed_cryptos.find(followed => followed.crypto_id === crypto.id))
+            res.status(200).json(filtered)
+        } catch (error) {
+            res.status(400).send(error)
+        }
     })
 
 router
