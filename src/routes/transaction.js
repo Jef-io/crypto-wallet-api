@@ -50,7 +50,6 @@ router
             await sellCrypto(req.params.username, crypto_id, ammount, value)
             res.status(201).send(`${ammount} ${req.body.crypto_id} succesfully sold for ${req.params.username}`)
         } catch (error) {
-            console.log(error);
             res.status(400).send(error)
         }
     })

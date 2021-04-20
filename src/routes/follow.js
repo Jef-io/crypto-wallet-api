@@ -29,7 +29,6 @@ router
             ))
             res.status(200).json(result)
         } catch (error) {
-            console.log(errror);
             res.status(400).send(error)
         }
     })
