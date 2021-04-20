@@ -44,7 +44,42 @@ router
     .get(async (req, res) => {
         try {
             const history = await getWalletHistory(req.params.username)
-            res.status(200).send(history)
+            const wallet = await getCurrentWallet(req.params.username)
+            if (history.length === 0) {
+                res.status(204).send("No transactions")
+            } else {
+                const firstCacheTime = new Date(history[history.length - 1].date).getTime()
+                const lastCacheTime = new Date(history[0].date).getTime()
+                const diffTime = Math.abs(lastCacheTime - firstCacheTime)
+                const timeInterval = diffTime/20;
+                let walletInfo = []
+    
+                //Pour chaque crypto mise en cache
+                //Remplir pour chaque intervalle sa valeur à partir du moment ou elle a été enregistrée
+                for (const coinId in wallet) {
+                    const coinCachedInfos = history.filter((cache) => cache.crypto_id === wallet[coinId].crypto_id)
+                    for (const cachedId in coinCachedInfos) {
+                        let index = Math.floor((coinCachedInfos[cachedId].date.getTime()-firstCacheTime)/timeInterval);
+                        do {
+                            walletInfo[index] = {...walletInfo[index], [coinCachedInfos[cachedId].crypto_id]: coinCachedInfos[cachedId].value}
+                            index ++;
+                            if ((walletInfo[index] && walletInfo[index][coinCachedInfos[cachedId].crypto_id])) break;
+                        } while (index <= 20 );
+                    }
+                }
+                let time=firstCacheTime;
+                for (const key in walletInfo) {
+                    let sum = 0;
+                    for (const value in walletInfo[key]) {
+                        sum += walletInfo[key][value];
+                    }
+                    const date = new Date(time);
+                    walletInfo[key].price = sum;
+                    walletInfo[key].date = date.getDay() + "-" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds(),
+                    time += timeInterval;
+                }
+                res.status(200).send(walletInfo)
+            }
         } catch (error) {
             res.status(400).send(error)
         }
