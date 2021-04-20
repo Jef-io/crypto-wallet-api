@@ -2,7 +2,7 @@ const database = require('./database');
 
 const getLastCachedCryptoAmmount = (username, crypto_id) => {
     const sqlRequest = `
-        SELECT ammount 
+        SELECT ammount, value 
         FROM cache 
         WHERE username='${username}' 
         AND crypto_id='${crypto_id}' 
@@ -12,9 +12,9 @@ const getLastCachedCryptoAmmount = (username, crypto_id) => {
         database.request(sqlRequest, (err, result) => {
             if (err) reject(err);
             if (result.length === 0) {
-                resolve(0)
+                resolve({ammount: 0, value:0})
             } else {
-                resolve(result[0].ammount);
+                resolve(result[0]);
             }
         })
     })
@@ -41,9 +41,9 @@ const getCurrentWallet = (username) => {
 
 const checkCryptoAmmount = async (username, crypto_id, sellingAmmount) => {
     try {
-        const ammount = await getLastCachedCryptoAmmount(username, crypto_id)
-        if (ammount < sellingAmmount) throw `Not enough ${crypto_id} in ${username}'s wallet...`
-        return ammount;
+        const cached = await getLastCachedCryptoAmmount(username, crypto_id)
+        if (cached.ammount < sellingAmmount) throw `Not enough ${crypto_id} in ${username}'s wallet...`
+        return cached;
     } catch (error) {
         throw error
     }
@@ -63,7 +63,7 @@ const cacheCryptoTransaction = (username, crypto_id, ammount, value) => {
 
 const getWalletHistory = async (username) => {
     const sqlRequest = `
-        SELECT crypto_id, ammount, date 
+        SELECT * 
         FROM cache 
         WHERE username='${username}' 
         ORDER BY date DESC;`

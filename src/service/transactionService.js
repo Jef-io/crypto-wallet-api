@@ -36,7 +36,12 @@ const getFullHistory = async (username) => {
 const buyCrypto = async (username, crypto_id, ammount, value) => {
     try {
         const cached = await getLastCachedCryptoAmmount(username, crypto_id);
-        await cacheCryptoTransaction(username, crypto_id, (cached + ammount), value);
+        await cacheCryptoTransaction(
+            username, 
+            crypto_id, 
+            (parseInt(cached.ammount) + parseInt(ammount)), 
+            (parseInt(value) + parseInt(cached.value))
+        );
     } catch (err) {
         throw err
     }
@@ -54,7 +59,12 @@ const buyCrypto = async (username, crypto_id, ammount, value) => {
 const sellCrypto = async (username, crypto_id, ammount, value) => {
     try {
         const cached = await checkCryptoAmmount(username, crypto_id, ammount)
-        await cacheCryptoTransaction(username, crypto_id, (cached - ammount), value);
+        await cacheCryptoTransaction(
+            username, 
+            crypto_id, 
+            (parseInt(cached.ammount) - parseInt(ammount)), 
+            (parseInt(cached.value) - parseInt(value))
+        );
     } catch (error) {
         throw error
     }
