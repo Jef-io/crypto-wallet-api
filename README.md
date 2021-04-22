@@ -1,6 +1,6 @@
 # Crypto wallet api
 
-Ce projet Express est la partie back end de Crypto Wallet.
+Ce projet Express est la partie back end de [Crypto wallet app](https://github.com/Jef-io/crypto-wallet-app).
 
 ## Utiliser l'application
 
