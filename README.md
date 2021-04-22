@@ -5,7 +5,7 @@ Ce projet Express est la partie back end de Crypto Wallet.
 ## Utiliser l'application
 
 Pour que l'api fonctionne, il faut qu'une base de données MySQL soit en fonctionnement.
-Vous trouverez dans ce repo un script sql permettant d'initialiser cette dernière.
+Vous trouverez un script sql permettant d'initialiser cette dernière.
 
 ### `npm install`
 
