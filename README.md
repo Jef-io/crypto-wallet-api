@@ -1,15 +1,21 @@
 # Crypto wallet api
 
-Ce projet Express est la partie back end de [Crypto wallet app](https://github.com/Jef-io/crypto-wallet-app).
+Ce répertoire est la partie back-end en Express de l'application REACT [Crypto wallet app](https://github.com/Jef-io/crypto-wallet-app).
 
-## Utiliser l'application
+## Installer l'API
 
 Pour que l'api fonctionne, il faut qu'une base de données MySQL soit en fonctionnement.
-Vous trouverez un script sql permettant d'initialiser cette dernière.
+Pour cela, via un service tel que WAMP créez une nouvelle base de données. Pour plus de simplicité, nommez la 'rtai_crypto_wallet'. Une fois la base créée, importez le script sql permettant d'initialiser cette dernière. Si vous avez choisi un nom différent pour la base de données, modifiez le fichier src>services>database.js. Ligne 7, changer le nom de la base de données pour le votre.
+
+Une fois la base de données installée, vous pouvez lancer la commande suivante :
 
 ### `npm install`
 
 Installe toutes les dépendances pour l'application
+
+## Installer l'API
+
+Pour lancer l'API, faite la commande suivante :
 
 ### `npm start`
 
