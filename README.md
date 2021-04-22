@@ -5,7 +5,7 @@ Ce répertoire est la partie back-end en Express de l'application REACT [Crypto 
 ## Installer l'API
 
 Pour que l'api fonctionne, il faut qu'une base de données MySQL soit en fonctionnement.
-Pour cela, via un service tel que WAMP créez une nouvelle base de données. Pour plus de simplicité, nommez la 'rtai_crypto_wallet'. Une fois la base créée, importez le script sql permettant d'initialiser cette dernière. Si vous avez choisi un nom différent pour la base de données, modifiez le fichier src>services>database.js. Ligne 7, changer le nom de la base de données pour le votre.
+Pour cela, via un service tel que WAMP créez une nouvelle base de données. Pour plus de simplicité, nommez la 'rtai_crypto_wallet'. Une fois la base créée, importez le script sql permettant d'initialiser cette dernière. Si vous avez choisi un nom différent pour la base de données, modifiez le fichier src>services>database.js. Ligne 7, changer le nom de la base de données pour le vôtre.
 
 Une fois la base de données installée, vous pouvez lancer la commande suivante :
 
