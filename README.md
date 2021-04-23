@@ -13,7 +13,7 @@ Une fois la base de données installée, vous pouvez lancer la commande suivante
 
 Installe toutes les dépendances pour l'application
 
-## Installer l'API
+## Démarrer l'API
 
 Pour lancer l'API, faite la commande suivante :
 
